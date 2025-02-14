@@ -1,0 +1,17 @@
+{
+  "name": "sepricloud_api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.mjs"
+  },
+  "keywords": [],
+  "author": "Adam Fanslau",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1"
+  }
+}
