@@ -4,6 +4,7 @@ import multer from 'multer';
 import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { uploadedFileMetadata } from './db/index.mjs';
 
 const app = express();
 
@@ -38,10 +39,12 @@ const upload = multer({ storage });
 app.use(morgan("dev"));
 
 // POST endpoint to upload a jpg file
-app.post('/uploadFile', upload.single('file'), (req, res) => {
+app.post('/uploadFile', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded or invalid file type' });
     }
+
+    await uploadedFileMetadata(req.file.filename, null, null);
 
     res.status(200).json({
         message: 'File uploaded successfully',

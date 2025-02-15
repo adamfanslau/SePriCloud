@@ -1,0 +1,25 @@
+services:
+  sepricloud_api:
+    image: adamf00/sepricloud_api
+    restart: always
+    ports:
+      - 3001:3001
+    volumes:
+      - type: bind
+        source: ~/dev/NCI-project/SePriCloud/Upload
+        target: /app/uploads
+  postgres:
+    image: adamf00/sepricloud_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: uploads
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+    driver: local
