@@ -1,0 +1,6 @@
+services:
+  sepricloud_api:
+    image: adamf00/sepricloud_api
+    restart: always
+    ports:
+      - 3001:3001

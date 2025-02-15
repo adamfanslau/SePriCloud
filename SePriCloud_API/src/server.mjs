@@ -6,7 +6,7 @@ import app from './app/api.mjs';
 
 const PORT = 3001;
 
-// currently considering reverse proxy to handle the https encryption
+// currently considering reverse proxy to handle the https encryption (nginx) 🤔
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = dirname(__filename);
 
