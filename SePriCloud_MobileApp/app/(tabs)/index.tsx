@@ -24,8 +24,6 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container} >
-      <Text>SePriCloud</Text>
-      <Link href="/details">View details</Link>
       <Button title="Pick an image from camera roll" onPress={pickImage} />
       {image && <Image source={{ uri: image }} style={styles.image} />}
     </View>
