@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { useEffect, useState, useCallback } from 'react';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface IFileMetadata {
         id: string;
@@ -12,35 +13,55 @@ interface IFileMetadata {
 export default function DetailsScreen() {
     const [filesMetadata, setFilesMetadata] = useState<IFileMetadata[]>([]);
 
-    useEffect(() => {
-        fetch('http://192.168.1.7:3001/getAllFiles')
+    useFocusEffect(
+        useCallback(() => {
+          // Do something when the screen is focused
+          fetch('http://192.168.1.7:3001/getAllFiles')
             .then((res) => res.json())
             .then((data) => {
                 setFilesMetadata(data);
             });
-    }, []);
+          return () => {
+            // Do something when the screen is unfocused
+            // Useful for cleanup functions
+          };
+        }, [])
+      );
+
+    // useEffect(() => {
+    //     fetch('http://192.168.1.7:3001/getAllFiles')
+    //         .then((res) => res.json())
+    //         .then((data) => {
+    //             setFilesMetadata(data);
+    //         });
+    // }, []);
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             {filesMetadata.length > 0 ? (
                 filesMetadata.map((file, index) => (
-                    <>
-                    <Image key={file.id} source={{uri: `http://192.168.1.7:3001/files/${file.filename}`}} style={styles.image} />
-                    <Text key={file.filename}>{file.filename}</Text>
-                    <Text key={new Date(file.datetime_added).toISOString()}>{new Date(file.datetime_added).toISOString()}</Text>
-                    </>
+                    <View key={file.id} style={styles.fileContainer}>
+                        <Image source={{uri: `http://192.168.1.7:3001/files/${file.filename}`}} style={styles.image} />
+                        <Text>{file.filename}</Text>
+                        <Text>{new Date(file.datetime_added).toISOString()}</Text>
+                    </View>
                 ))
             ) : (
                 <Text>No files found</Text>
             )}
-        </View>
+        </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         justifyContent: 'center',
+        alignItems: 'center',
+        padding: 16,
+    },
+    fileContainer: {
+        marginBottom: 20,
         alignItems: 'center',
     },
     image: {
