@@ -1,10 +1,12 @@
 import express from 'express';
+import cors from 'cors';
 import morgan from 'morgan';
 import multer from 'multer';
 import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { uploadedFileMetadata, getAllFilesMetadata } from './db/index.mjs';
+import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 
@@ -34,6 +36,11 @@ const storage = multer.diskStorage({
 // };
 
 const upload = multer({ storage });
+
+// set cors policy
+app.use(cors({
+    origin: '*',
+}));
 
 // api logging:
 app.use(morgan("dev"));
