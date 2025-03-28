@@ -1,6 +1,8 @@
+import { Link } from "expo-router";
 import { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAuth } from "@/context/AuthProvider";
 
 interface IFileMetadata {
         id: string;
@@ -12,6 +14,10 @@ interface IFileMetadata {
 
 export default function DetailsScreen() {
     const [filesMetadata, setFilesMetadata] = useState<IFileMetadata[]>([]);
+
+    const { user } = useAuth();
+
+    console.log('user: ', user);
 
     useFocusEffect(
         useCallback(() => {
@@ -36,7 +42,7 @@ export default function DetailsScreen() {
     //         });
     // }, []);
 
-    return (
+    return user ? (
         <ScrollView contentContainerStyle={styles.container}>
             {filesMetadata.length > 0 ? (
                 filesMetadata.map((file, index) => (
@@ -50,6 +56,10 @@ export default function DetailsScreen() {
                 <Text>No files found</Text>
             )}
         </ScrollView>
+    ) : (
+        <View style={styles.container} >
+            <Link href='/(tabs)'>Log in to view this tab</Link>
+        </View>
     )
 }
 
