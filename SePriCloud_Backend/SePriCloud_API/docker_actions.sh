@@ -17,15 +17,15 @@ function docker_login() {
   echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
 }
 
-# Build the Docker image
-echo "Building Docker image..."
-docker build -t "$DOCKER_USERNAME/$DOCKER_REPO:$IMAGE_TAG" .
+# Enable Buildx for multi-architecture builds
+echo "Setting up Docker Buildx..."
+docker buildx create --use --name multiarch_builder || echo "Buildx builder already exists."
+docker buildx inspect multiarch_builder --bootstrap
 
-# Log in to Docker Hub
-docker_login
+# Build and push the multi-platform Docker image
+echo "Building and pushing Docker image for amd64 and arm64..."
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t "$DOCKER_USERNAME/$DOCKER_REPO:$IMAGE_TAG" \
+  --push .
 
-# Push the Docker image to Docker Hub
-echo "Pushing Docker image to Docker Hub..."
-docker push "$DOCKER_USERNAME/$DOCKER_REPO:$IMAGE_TAG"
-
-echo "Docker image successfully published to Docker Hub!"
+echo "Docker image successfully built and pushed for amd64 and Raspberry Pi 5 (arm64)!"
