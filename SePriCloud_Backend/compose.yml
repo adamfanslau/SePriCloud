@@ -7,6 +7,8 @@ services:
     ports:
       - 3001:3001
     volumes:
+      # for Raspberry Pi:
+      # - /home/adamf00/SePriCloud/Upload:/app/uploads
       - type: bind
         source: ~/dev/NCI-project/SePriCloud/Upload
         target: /app/uploads
