@@ -10,11 +10,19 @@ type User = {
 type AuthProvider = {
   user: User | null;
   updateUser: (user: User | null) => void;
+  serverUrl: string;
+  updateServerUrl: (serverUrl: string) => void;
+  authPrefix: string;
+  apiPrefix: string;
 };
 
 export const AuthContext = createContext<AuthProvider>({
   user: null,
   updateUser: () => {},
+  serverUrl: '',
+  updateServerUrl: () => {},
+  authPrefix: '',
+  apiPrefix: '',
 });
 
 export function useAuth() {
@@ -27,6 +35,9 @@ export function useAuth() {
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [serverUrl, setServerUrl] = useState<string>('');
+  const [authPrefix, setAuthPrefix] = useState<string>('');
+  const [apiPrefix, setApiPrefix] = useState<string>('');
 
   const updateUser = (updatedUser: User | null) => {
     console.log('inside updateUser: ', updatedUser);
@@ -34,8 +45,16 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     console.log('after setUser: ', user);
   }
 
+  const updateServerUrl = (updatedUrl: string) => {
+    console.log('inside updateServerUrl: ', updatedUrl);
+    setServerUrl(updatedUrl);
+    setApiPrefix('sepricloud');
+    setAuthPrefix('auth');
+    console.log('after setServerUrl: ', serverUrl);
+  }
+
   return (
-    <AuthContext.Provider value={{ user, updateUser }}>
+    <AuthContext.Provider value={{ user, updateUser, serverUrl, updateServerUrl, authPrefix, apiPrefix }}>
       {children}
     </AuthContext.Provider>
   );

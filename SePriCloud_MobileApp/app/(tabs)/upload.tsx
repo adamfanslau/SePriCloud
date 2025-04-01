@@ -8,7 +8,7 @@ import { useAuth } from "@/context/AuthProvider";
 export default function HomeScreen() {
   const [image, setImage] = useState<string | null>(null);
 
-  const { user } = useAuth();
+  const { user, serverUrl, apiPrefix } = useAuth();
 
   console.log('user: ', user);
 
@@ -34,7 +34,7 @@ export default function HomeScreen() {
       Alert.alert("No image selected", "Please select an image first.");
       return;
     }
-    await FileSystem.uploadAsync('http://192.168.1.7:3001/uploadFile', image, {
+    await FileSystem.uploadAsync(`https://${apiPrefix}.${serverUrl}/uploadFile`, image, {
       httpMethod: 'POST',
       uploadType: FileSystem.FileSystemUploadType.MULTIPART,
       fieldName: 'file'

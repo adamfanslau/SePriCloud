@@ -15,14 +15,20 @@ interface IFileMetadata {
 export default function DetailsScreen() {
     const [filesMetadata, setFilesMetadata] = useState<IFileMetadata[]>([]);
 
-    const { user } = useAuth();
+    const { user, serverUrl, apiPrefix } = useAuth();
 
-    console.log('user: ', user);
+    // useEffect(() => {
+    //     console.log('fileList -> serverUrl: ', serverUrl);
+    // }, [serverUrl]);
+
+    console.log('fileList -> user: ', user);
+    console.log('fileList -> serverUrl: ', serverUrl);
 
     useFocusEffect(
         useCallback(() => {
           // Do something when the screen is focused
-          fetch('http://192.168.1.7:3001/getAllFiles')
+          console.log(`https://${apiPrefix}.${serverUrl}/getAllFiles`);
+          fetch(`https://${apiPrefix}.${serverUrl}/getAllFiles`)
             .then((res) => res.json())
             .then((data) => {
                 setFilesMetadata(data);
@@ -31,7 +37,7 @@ export default function DetailsScreen() {
             // Do something when the screen is unfocused
             // Useful for cleanup functions
           };
-        }, [])
+        }, [serverUrl])
       );
 
     // useEffect(() => {
@@ -47,7 +53,7 @@ export default function DetailsScreen() {
             {filesMetadata.length > 0 ? (
                 filesMetadata.map((file, index) => (
                     <View key={file.id} style={styles.fileContainer}>
-                        <Image source={{uri: `http://192.168.1.7:3001/files/${file.filename}`}} style={styles.image} />
+                        <Image source={{uri: `https://${apiPrefix}.${serverUrl}/files/${file.filename}`}} style={styles.image} />
                         <Text>{file.filename}</Text>
                         <Text>{new Date(file.datetime_added).toISOString()}</Text>
                     </View>
