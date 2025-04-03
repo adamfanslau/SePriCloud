@@ -8,7 +8,7 @@ import { useAuth } from "@/context/AuthProvider";
 export default function HomeScreen() {
   const [image, setImage] = useState<string | null>(null);
 
-  const { user, serverUrl, apiPrefix } = useAuth();
+  const { user, serverUrl, apiPrefix, apiKey } = useAuth();
 
   console.log('user: ', user);
 
@@ -37,7 +37,10 @@ export default function HomeScreen() {
     await FileSystem.uploadAsync(`https://${apiPrefix}.${serverUrl}/uploadFile`, image, {
       httpMethod: 'POST',
       uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-      fieldName: 'file'
+      fieldName: 'file',
+      headers: {
+        'sepricloud-api-key': apiKey
+      }
     });
   };
 

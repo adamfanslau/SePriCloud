@@ -15,7 +15,17 @@ import {
 import { useAuth } from "@/context/AuthProvider";
 
 export default function AccountScreen() {
-  const { updateUser, updateServerUrl, authPrefix } = useAuth();
+  const {
+    updateUser,
+    serverUrl,
+    updateServerUrl,
+    authPrefix,
+    updateAuthPrefix,
+    apiPrefix,
+    updateApiPrefix,
+    apiKey,
+    updateApiKey
+  } = useAuth();
   /**
    * This will hold the access token and the user details after successful authorization
    */
@@ -26,6 +36,12 @@ export default function AccountScreen() {
   
   // State to track if the address has been confirmed
   const [isAddressConfirmed, setIsAddressConfirmed] = useState<boolean>(false);
+  // State to track if the auth prefix has been confirmed
+  const [isAuthPrefixConfirmed, setIsAuthPrefixConfirmed] = useState<boolean>(false);
+  // State to track if the api prefix has been confirmed
+  const [isApiPrefixConfirmed, setIsApiPrefixConfirmed] = useState<boolean>(false);
+  // State to track if the api key has been confirmed
+  const [isApiKeyConfirmed, setIsApiKeyConfirmed] = useState<boolean>(false);
 
   useEffect(() => {
     updateUser(authResponse);
@@ -75,11 +91,6 @@ export default function AccountScreen() {
     } else {
       Alert.alert("Error", "Please enter a valid SePriCloud address");
     }
-  };
-
-  // Function to edit the SePriCloud address
-  const editSePriCloudAddress = () => {
-    setIsAddressConfirmed(false);
   };
 
   /**
@@ -176,7 +187,7 @@ export default function AccountScreen() {
         {isAddressConfirmed ? (
           <View style={styles.confirmedAddressContainer}>
             <Text style={styles.confirmedAddress}>{sePriCloudAddress}</Text>
-            <TouchableOpacity onPress={editSePriCloudAddress}>
+            <TouchableOpacity onPress={() => setIsAddressConfirmed(false)}>
               <Text style={styles.editButton}>Edit</Text>
             </TouchableOpacity>
           </View>
@@ -199,10 +210,98 @@ export default function AccountScreen() {
           </View>
         )}
       </View>
+      {/* Auth Prefix Input Section */}
+      <View style={styles.addressSection}>
+        <Text style={styles.label}>Auth prefix</Text>
+        {isAuthPrefixConfirmed ? (
+          <View style={styles.confirmedAddressContainer}>
+            <Text style={styles.confirmedAddress}>{authPrefix}</Text>
+            <TouchableOpacity onPress={() => setIsAuthPrefixConfirmed(false)}>
+              <Text style={styles.editButton}>Edit</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={authPrefix}
+              onChangeText={updateAuthPrefix}
+              placeholder="Enter auth prefix"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+            <TouchableOpacity 
+              style={styles.confirmButton} 
+              onPress={() => setIsAuthPrefixConfirmed(true)}
+            >
+              <Text style={styles.confirmButtonText}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+      {/* Api Prefix Input Section */}
+      <View style={styles.addressSection}>
+        <Text style={styles.label}>Api prefix</Text>
+        {isApiPrefixConfirmed ? (
+          <View style={styles.confirmedAddressContainer}>
+            <Text style={styles.confirmedAddress}>{apiPrefix}</Text>
+            <TouchableOpacity onPress={() => setIsApiPrefixConfirmed(false)}>
+              <Text style={styles.editButton}>Edit</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={apiPrefix}
+              onChangeText={updateApiPrefix}
+              placeholder="Enter api prefix"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+            <TouchableOpacity 
+              style={styles.confirmButton} 
+              onPress={() => setIsApiPrefixConfirmed(true)}
+            >
+              <Text style={styles.confirmButtonText}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+      {/* Api Key Input Section */}
+      <View style={styles.addressSection}>
+        <Text style={styles.label}>Api key</Text>
+        {isApiKeyConfirmed ? (
+          <View style={styles.confirmedAddressContainer}>
+            <Text style={styles.confirmedAddress}>{apiKey}</Text>
+            <TouchableOpacity onPress={() => setIsApiKeyConfirmed(false)}>
+              <Text style={styles.editButton}>Edit</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={apiKey}
+              onChangeText={updateApiKey}
+              placeholder="Enter api key"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+            <TouchableOpacity 
+              style={styles.confirmButton} 
+              onPress={() => setIsApiKeyConfirmed(true)}
+            >
+              <Text style={styles.confirmButtonText}>Confirm</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
 
       <View style={styles.hRow}>
         {(authResponse) ? (
             <>
+              <Text style={styles.headerEmail}>{authResponse.user.given_name} {authResponse.user.family_name}</Text>
               <Text style={styles.headerEmail}>{authResponse.user.email}</Text>
               <TouchableOpacity disabled={!requestLogin} onPress={() => logout()}>
                 <Text style={styles.buttonLg}>Log out</Text>

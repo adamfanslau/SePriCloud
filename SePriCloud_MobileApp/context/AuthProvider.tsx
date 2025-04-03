@@ -13,7 +13,11 @@ type AuthProvider = {
   serverUrl: string;
   updateServerUrl: (serverUrl: string) => void;
   authPrefix: string;
+  updateAuthPrefix: (authPrefix: string) => void;
   apiPrefix: string;
+  updateApiPrefix: (apiPrefix: string) => void;
+  apiKey: string;
+  updateApiKey: (apiKey: string) => void;
 };
 
 export const AuthContext = createContext<AuthProvider>({
@@ -22,7 +26,11 @@ export const AuthContext = createContext<AuthProvider>({
   serverUrl: '',
   updateServerUrl: () => {},
   authPrefix: '',
+  updateAuthPrefix: () => {},
   apiPrefix: '',
+  updateApiPrefix: () => {},
+  apiKey: '',
+  updateApiKey: () => {},
 });
 
 export function useAuth() {
@@ -38,23 +46,41 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [serverUrl, setServerUrl] = useState<string>('');
   const [authPrefix, setAuthPrefix] = useState<string>('');
   const [apiPrefix, setApiPrefix] = useState<string>('');
+  const [apiKey, setApiKey] = useState<string>('');
 
   const updateUser = (updatedUser: User | null) => {
-    console.log('inside updateUser: ', updatedUser);
     setUser(updatedUser);
-    console.log('after setUser: ', user);
   }
 
   const updateServerUrl = (updatedUrl: string) => {
-    console.log('inside updateServerUrl: ', updatedUrl);
     setServerUrl(updatedUrl);
-    setApiPrefix('sepricloud');
-    setAuthPrefix('auth');
-    console.log('after setServerUrl: ', serverUrl);
+  }
+
+  const updateAuthPrefix = (updatedAuthPrefix: string) => {
+    setAuthPrefix(updatedAuthPrefix);
+  }
+
+  const updateApiPrefix = (updatedApiPrefix: string) => {
+    setApiPrefix(updatedApiPrefix);
+  }
+
+  const updateApiKey = (updatedApiKey: string) => {
+    setApiKey(updatedApiKey);
   }
 
   return (
-    <AuthContext.Provider value={{ user, updateUser, serverUrl, updateServerUrl, authPrefix, apiPrefix }}>
+    <AuthContext.Provider value={{
+      user,
+      updateUser,
+      serverUrl,
+      updateServerUrl,
+      authPrefix,
+      updateAuthPrefix,
+      apiPrefix,
+      updateApiPrefix,
+      apiKey,
+      updateApiKey
+    }}>
       {children}
     </AuthContext.Provider>
   );

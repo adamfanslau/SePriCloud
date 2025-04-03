@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthProvider";
 
 interface IFileMetadata {
         id: string;
+        added_by: string;
         datetime_added: Date;
         filename: string;
         tags: string | null,
@@ -15,7 +16,7 @@ interface IFileMetadata {
 export default function DetailsScreen() {
     const [filesMetadata, setFilesMetadata] = useState<IFileMetadata[]>([]);
 
-    const { user, serverUrl, apiPrefix } = useAuth();
+    const { user, serverUrl, apiPrefix, apiKey } = useAuth();
 
     // useEffect(() => {
     //     console.log('fileList -> serverUrl: ', serverUrl);
@@ -28,7 +29,7 @@ export default function DetailsScreen() {
         useCallback(() => {
           // Do something when the screen is focused
           console.log(`https://${apiPrefix}.${serverUrl}/getAllFiles`);
-          fetch(`https://${apiPrefix}.${serverUrl}/getAllFiles`)
+          fetch(`https://${apiPrefix}.${serverUrl}/getAllFiles`, {headers: {'sepricloud-api-key': apiKey}})
             .then((res) => res.json())
             .then((data) => {
                 setFilesMetadata(data);
@@ -54,7 +55,7 @@ export default function DetailsScreen() {
                 filesMetadata.map((file, index) => (
                     <View key={file.id} style={styles.fileContainer}>
                         <Image source={{uri: `https://${apiPrefix}.${serverUrl}/files/${file.filename}`}} style={styles.image} />
-                        <Text>{file.filename}</Text>
+                        <Text>Added by: {file.added_by}</Text>
                         <Text>{new Date(file.datetime_added).toISOString()}</Text>
                     </View>
                 ))
