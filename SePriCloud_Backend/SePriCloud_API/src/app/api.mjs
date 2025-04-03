@@ -7,6 +7,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { uploadedFileMetadata, getAllFilesMetadata } from './db/index.mjs';
 import { v4 as uuidv4 } from 'uuid';
+import { verifyApiKey } from './verifyApiKey.mjs';
 
 const app = express();
 
@@ -49,12 +50,24 @@ app.use('/files', express.static(uploadFolder));
 
 // POST endpoint to upload a jpg file
 app.post('/uploadFile', upload.single('file'), async (req, res) => {
+    console.log(req.headers['sepricloud-api-key']);
+    const apiKey = req.headers['sepricloud-api-key'];
+    let authorizedUser =null;
+
+    if (apiKey) {
+        authorizedUser = await verifyApiKey(apiKey);
+    }
+
+    if (!authorizedUser) {
+        return res.status(401).json({ error: '401 - ACCESS DENIED' });
+    }
+
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded or invalid file type' });
     }
 
     // save metadata to db:
-    await uploadedFileMetadata(req.file.filename, null, null);
+    await uploadedFileMetadata(req.file.filename, authorizedUser.username, null, null);
 
     res.status(200).json({
         message: 'File uploaded successfully',
@@ -64,9 +77,14 @@ app.post('/uploadFile', upload.single('file'), async (req, res) => {
 });
 
 app.get('/getAllFiles', async (req, res) => {
-    const filesMetadata = await getAllFilesMetadata();
-    console.log(filesMetadata);
-    res.status(200).json(filesMetadata);
+    console.log(req.headers['sepricloud-api-key']);
+    const apiKey = req.headers['sepricloud-api-key'];
+    if (apiKey && await verifyApiKey(apiKey)) {
+        const filesMetadata = await getAllFilesMetadata();
+        res.status(200).json(filesMetadata);
+    } else {
+        res.status(401).json({error: '401 - ACCESS DENIED'});
+    }
 });
 
 // test endpoint

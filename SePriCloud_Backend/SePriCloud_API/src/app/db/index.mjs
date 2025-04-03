@@ -6,11 +6,15 @@ prexit(async () => {
     await sql.end({ timeout: 5 });
 });
 
-export const uploadedFileMetadata = async (fileName, tags, description) => {
-    await sql`INSERT INTO file_metadata(id, datetime_added, filename, tags, description)
-                VALUES (${uuidv4()}, ${new Date().toISOString()}, ${fileName}, ${tags}, ${description});`;
+export const uploadedFileMetadata = async (fileName, username, tags, description) => {
+    await sql`INSERT INTO file_metadata(id, added_by, datetime_added, filename, tags, description)
+                VALUES (${uuidv4()}, ${username}, ${new Date().toISOString()}, ${fileName}, ${tags}, ${description});`;
 };
 
 export const getAllFilesMetadata = async () => {
     return await sql`SELECT * FROM file_metadata ORDER BY datetime_added DESC; `;
+};
+
+export const getAllApiKeys = async () => {
+    return await sql`SELECT * FROM api_keys;`;
 };
