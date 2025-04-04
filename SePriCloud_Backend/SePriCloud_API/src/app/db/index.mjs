@@ -15,6 +15,10 @@ export const getAllFilesMetadata = async () => {
     return await sql`SELECT * FROM file_metadata ORDER BY datetime_added DESC; `;
 };
 
+export const updateFileTags = async (id, tags) => {
+    await sql`UPDATE file_metadata SET tags=${tags} WHERE id=${id};`;
+};
+
 export const getAllApiKeys = async () => {
     return await sql`SELECT * FROM api_keys;`;
 };

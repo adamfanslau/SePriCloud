@@ -5,7 +5,7 @@ import multer from 'multer';
 import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { uploadedFileMetadata, getAllFilesMetadata } from './db/index.mjs';
+import { uploadedFileMetadata, getAllFilesMetadata, updateFileTags } from './db/index.mjs';
 import { v4 as uuidv4 } from 'uuid';
 import { verifyApiKey } from './verifyApiKey.mjs';
 
@@ -48,6 +48,8 @@ app.use(morgan("dev"));
 // serving uploaded files:
 app.use('/files', express.static(uploadFolder));
 
+app.use(express.json());
+
 // POST endpoint to upload a jpg file
 app.post('/uploadFile', upload.single('file'), async (req, res) => {
     console.log(req.headers['sepricloud-api-key']);
@@ -73,6 +75,34 @@ app.post('/uploadFile', upload.single('file'), async (req, res) => {
         message: 'File uploaded successfully',
         fileName: req.file.filename,
         filePath: req.file.path,
+    });
+});
+
+// POST endpoint to update file tags
+app.post('/updateTags', async (req, res) => {
+    console.log(req.headers['sepricloud-api-key']);
+    const apiKey = req.headers['sepricloud-api-key'];
+    let authorizedUser =null;
+
+    if (apiKey) {
+        authorizedUser = await verifyApiKey(apiKey);
+    }
+
+    if (!authorizedUser) {
+        return res.status(401).json({ error: '401 - ACCESS DENIED' });
+    }
+
+    console.log(req.body);
+
+    if (!req.body.id || !req.body.tags) {
+        return res.status(400).json({ error: 'Invalid request' });
+    }
+
+    // save tags to db:
+    await updateFileTags(req.body.id, req.body.tags);
+
+    res.status(200).json({
+        message: 'Tags updated successfully',
     });
 });
 
