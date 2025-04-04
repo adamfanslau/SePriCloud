@@ -1,12 +1,12 @@
 import { Link } from "expo-router";
-import { Button, Image, Text, View, StyleSheet, Alert, Modal, ActivityIndicator } from "react-native";
+import { Button, Image, Text, View, StyleSheet, Alert, Modal, ActivityIndicator, ScrollView, Dimensions, Pressable } from "react-native";
 import { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { useAuth } from "@/context/AuthProvider";
 
 export default function HomeScreen() {
-  const [image, setImage] = useState<string | null>(null);
+  const [imageArray, setImageArray] = useState<string [] | null>(null);
   const [uploading, setUploading] = useState(false);
 
   const { user, serverUrl, apiPrefix, apiKey } = useAuth();
@@ -16,46 +16,54 @@ export default function HomeScreen() {
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images', 'videos'],
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: false,
-      // aspect: [4, 3],
       quality: 1,
+      allowsMultipleSelection: true,
     });
 
     console.log(result);
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      console.log(image);
+      const pickedImages: string [] = [];
+      for (const asset of result.assets) {
+        pickedImages.push(asset.uri);
+      }
+      setImageArray(pickedImages);
+      console.log(pickedImages);
     }
   };
 
   const uploadImage = async () => {
-    if (!image) {
+    if (imageArray === null || imageArray.length === 0) {
       Alert.alert("No image selected", "Please select an image first.");
       return;
     }
     
     try {
       setUploading(true);
-      
-      const response = await FileSystem.uploadAsync(`https://${apiPrefix}.${serverUrl}/uploadFile`, image, {
+      const responseArray: FileSystem.FileSystemUploadResult [] = [];
+      for (const image of imageArray) {
+        responseArray.push(await FileSystem.uploadAsync(`https://${apiPrefix}.${serverUrl}/uploadFile`, image, {
         httpMethod: 'POST',
         uploadType: FileSystem.FileSystemUploadType.MULTIPART,
         fieldName: 'file',
         headers: {
           'sepricloud-api-key': apiKey
         }
-      });
+        }));
+      }
+      for (const response of responseArray) {
+        console.log('Upload complete:', response);
+      }
       
-      console.log('Upload complete:', response);
       Alert.alert("Success", "File uploaded successfully!");
     } catch (error) {
       console.error('Upload failed:', error);
       Alert.alert("Upload Failed", "There was an error uploading your file.");
     } finally {
       setUploading(false);
-      setImage(null);
+      setImageArray(null);
     }
   };
 
@@ -76,15 +84,44 @@ export default function HomeScreen() {
     </Modal>
   );
 
+  // Calculate image dimensions for the grid
+  const screenWidth = Dimensions.get('window').width;
+  const imageWidth = (screenWidth - 60) / 2; // Account for padding and gap
+
   return (
-    <View style={styles.container} >
+    <View style={styles.container}>
       <LoadingModal />
       {user ? (
-        <>
-          <Button title="Pick an image from camera roll" onPress={pickImage} />
-          {image && <Image source={{ uri: image }} style={styles.image} />}
-          {image && <Button title="Upload Image" onPress={uploadImage} />}
-        </>
+        <View style={styles.contentContainer}>
+          <Pressable style={styles.pickButton} onPress={pickImage}>
+            <Text style={styles.buttonText}>Pick image(s) from camera roll</Text>
+          </Pressable>
+          
+          {imageArray && imageArray.length > 0 && (
+            <ScrollView 
+              style={styles.scrollView}
+              contentContainerStyle={styles.scrollViewContent}
+            >
+              <View style={styles.imageGrid}>
+                {imageArray.map((image, index) => (
+                  <View key={index} style={styles.imageContainer}>
+                    <Image source={{ uri: image }} style={[styles.image, { width: imageWidth, height: imageWidth }]} />
+                  </View>
+                ))}
+              </View>
+            </ScrollView>
+          )}
+          {imageArray && imageArray.length > 0 && (
+            <Pressable style={styles.clearButton} onPress={() => setImageArray(null)}>
+              <Text style={styles.buttonText}>Clear selection</Text>
+            </Pressable>
+          )}
+          {imageArray && imageArray.length > 0 && (
+            <Pressable style={styles.uploadButton} onPress={uploadImage}>
+              <Text style={styles.buttonText}>Upload Image(s)</Text>
+            </Pressable>
+          )}
+        </View>
       ) : (
         <Link href='/(tabs)'>Log in to view this tab</Link>
       )}
@@ -95,13 +132,67 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#f5f5f5',
+  },
+  contentContainer: {
+    flex: 1,
+    padding: 16,
+    alignItems: 'center',
+  },
+  pickButton: {
+    backgroundColor: '#063970',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginVertical: 12,
+    width: '100%',
+    alignItems: 'center',
+  },
+  clearButton: {
+    backgroundColor: 'red',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginVertical: 8,
+    width: '100%',
+    alignItems: 'center',
+  },
+  uploadButton: {
+    backgroundColor: '#063970',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginVertical: 8,
+    width: '100%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  scrollView: {
+    width: '100%',
+    maxHeight: '70%',
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+  },
+  imageGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  imageContainer: {
+    marginBottom: 12,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: '#063970',
+    padding: 4,
   },
   image: {
-    width: 200,
-    height: 200,
-    marginTop: 10,
+    borderRadius: 6,
   },
   modalBackground: {
     flex: 1,
