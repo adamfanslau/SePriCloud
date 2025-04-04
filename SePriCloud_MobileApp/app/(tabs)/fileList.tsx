@@ -18,10 +18,6 @@ export default function DetailsScreen() {
 
     const { user, serverUrl, apiPrefix, apiKey } = useAuth();
 
-    // useEffect(() => {
-    //     console.log('fileList -> serverUrl: ', serverUrl);
-    // }, [serverUrl]);
-
     console.log('fileList -> user: ', user);
     console.log('fileList -> serverUrl: ', serverUrl);
 
@@ -34,29 +30,29 @@ export default function DetailsScreen() {
             .then((data) => {
                 setFilesMetadata(data);
             });
-          return () => {
-            // Do something when the screen is unfocused
-            // Useful for cleanup functions
-          };
         }, [serverUrl])
-      );
-
-    // useEffect(() => {
-    //     fetch('http://192.168.1.7:3001/getAllFiles')
-    //         .then((res) => res.json())
-    //         .then((data) => {
-    //             setFilesMetadata(data);
-    //         });
-    // }, []);
+    );
 
     return user ? (
         <ScrollView contentContainerStyle={styles.container}>
             {filesMetadata.length > 0 ? (
                 filesMetadata.map((file, index) => (
                     <View key={file.id} style={styles.fileContainer}>
-                        <Image source={{uri: `https://${apiPrefix}.${serverUrl}/files/${file.filename}`}} style={styles.image} />
+                        <Image
+                            source={{uri: `https://${apiPrefix}.${serverUrl}/files/${file.filename}`}}
+                            style={styles.image}
+                        />
                         <Text>Added by: {file.added_by}</Text>
-                        <Text>{new Date(file.datetime_added).toISOString()}</Text>
+                        <Text>
+                            {new Date(file.datetime_added).toLocaleString(`en-IE`, {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: '2-digit',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    weekday: 'long'
+				            })}
+                        </Text>
                     </View>
                 ))
             ) : (
