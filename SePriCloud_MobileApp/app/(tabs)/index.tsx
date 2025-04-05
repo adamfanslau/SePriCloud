@@ -304,7 +304,7 @@ export default function AccountScreen() {
               <Text style={styles.headerEmail}>{authResponse.user.given_name} {authResponse.user.family_name}</Text>
               <Text style={styles.headerEmail}>{authResponse.user.email}</Text>
               <TouchableOpacity disabled={!requestLogin} onPress={() => logout()}>
-                <Text style={styles.buttonLg}>Log out</Text>
+                <Text style={styles.buttonLgout}>Log out</Text>
               </TouchableOpacity>
             </>
         ) : (
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   confirmButton: {
-    backgroundColor: '#096324',
+    backgroundColor: '#3f83cc',
     paddingVertical: 12,
     paddingHorizontal: 15,
     borderRadius: 8,
@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   editButton: {
-    color: '#096324',
+    color: '#3f83cc',
     fontWeight: '600',
     marginLeft: 10,
   },
@@ -401,12 +401,12 @@ const styles = StyleSheet.create({
     rowGap: 10,
   },
   headerEmail: {
-    color: '#096324',
+    color: '#444f5d',
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   buttonLg: {
-    backgroundColor: '#096324',
+    backgroundColor: '#3f83cc',
     color: '#ffffff',
     fontSize: 16,
     fontWeight: '700',
@@ -416,6 +416,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     textDecorationLine: 'none',
     overflow: 'hidden',
+  },
+  buttonLgout: {
+    backgroundColor: '#c63434',
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '700',
+    borderRadius: 10,
+    textAlign: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    textDecorationLine: 'none',
+    overflow: 'hidden',
+    marginTop: 5,
   },
   disabledButton: {
     opacity: 0.5,

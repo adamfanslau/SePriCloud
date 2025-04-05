@@ -24,7 +24,9 @@ export default function RootLayout() {
                   style={{ width: 35, height: 35, marginRight: 10 }} // Adjust size as needed
                   resizeMode="contain"
                 />
-                <Text style={{ fontSize: 30, fontWeight: "bold" }}>SePriCloud</Text>
+                <Text style={{ fontSize: 30, fontWeight: "bold", color: "#444f5d" }}>Se</Text>
+                <Text style={{ fontSize: 30, fontWeight: "bold", color: "#3f83cc" }}>Pri</Text>
+                <Text style={{ fontSize: 30, fontWeight: "bold", color: "#444f5d" }}>Cloud</Text>
               </View>
             ),
             headerLeft: () => <></>,

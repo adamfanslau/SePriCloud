@@ -442,7 +442,7 @@ export default function DetailsScreen() {
     </View>
   ) : (
     <View style={styles.container} >
-      <Link href='/(tabs)'>Log in to view this tab</Link>
+      <Link style={{fontSize: 18}} href='/(tabs)'>Log in to view this tab</Link>
     </View>
   );
 }
@@ -497,7 +497,7 @@ const styles = StyleSheet.create({
     marginRight: 8, // Add spacing between buttons
   },
   activeSortButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#3f83cc',
   },
   sortButtonText: {
     fontWeight: '500',
@@ -585,7 +585,7 @@ const styles = StyleSheet.create({
     color: '#333', // Ensure text is dark
   },
   addTagButton: {
-    backgroundColor: '#4caf50',
+    backgroundColor: '#3f83cc',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 4,

@@ -105,7 +105,7 @@ export default function HomeScreen() {
               <View style={styles.imageGrid}>
                 {imageArray.map((image, index) => (
                   <View key={index} style={styles.imageContainer}>
-                    <Image source={{ uri: image }} style={[styles.image, { width: imageWidth, height: imageWidth }]} />
+                    <Image source={{ uri: image }} style={{ width: imageWidth, height: imageWidth }} />
                   </View>
                 ))}
               </View>
@@ -123,13 +123,20 @@ export default function HomeScreen() {
           )}
         </View>
       ) : (
-        <Link href='/(tabs)'>Log in to view this tab</Link>
+        <View style={styles.linkContainer} >
+          <Link style={{fontSize: 18}} href='/(tabs)'>Log in to view this tab</Link>
+        </View>
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  linkContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
@@ -140,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   pickButton: {
-    backgroundColor: '#063970',
+    backgroundColor: '#3f83cc',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -149,7 +156,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   clearButton: {
-    backgroundColor: 'red',
+    backgroundColor: '#c63434',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -158,7 +165,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   uploadButton: {
-    backgroundColor: '#063970',
+    backgroundColor: '#3f83cc',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -186,13 +193,8 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     marginBottom: 12,
-    borderRadius: 8,
     overflow: 'hidden',
-    backgroundColor: '#063970',
     padding: 4,
-  },
-  image: {
-    borderRadius: 6,
   },
   modalBackground: {
     flex: 1,
