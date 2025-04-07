@@ -1,8 +1,8 @@
-import { getAllApiKeys } from './db/index.mjs';
+import db from './db/index.mjs';
 
-export const verifyApiKey = async (sentApiKey) => {
+const verifyApiKey = async (sentApiKey) => {
     if (sentApiKey && typeof sentApiKey  === "string" && sentApiKey !== '') {
-        const apiKeyArray = await getAllApiKeys();
+        const apiKeyArray = await db.getAllApiKeys();
 
         if (apiKeyArray && apiKeyArray.length > 0) {
             for (const apiKey of apiKeyArray) {
@@ -14,4 +14,8 @@ export const verifyApiKey = async (sentApiKey) => {
     }
 
     return null;
+};
+
+export default {
+    verifyApiKey
 };

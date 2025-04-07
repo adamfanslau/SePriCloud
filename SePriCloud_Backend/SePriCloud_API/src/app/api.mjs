@@ -5,9 +5,11 @@ import multer from 'multer';
 import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { uploadedFileMetadata, getAllFilesMetadata, updateFileTags } from './db/index.mjs';
+// import { uploadedFileMetadata, getAllFilesMetadata, updateFileTags } from './db/index.mjs';
 import { v4 as uuidv4 } from 'uuid';
-import { verifyApiKey } from './verifyApiKey.mjs';
+// import { verifyApiKey } from './verifyApiKey.mjs';
+import db from './db/index.mjs';
+import auth from './verifyApiKey.mjs';
 
 const app = express();
 
@@ -57,7 +59,7 @@ app.post('/uploadFile', upload.single('file'), async (req, res) => {
     let authorizedUser =null;
 
     if (apiKey) {
-        authorizedUser = await verifyApiKey(apiKey);
+        authorizedUser = await auth.verifyApiKey(apiKey);
     }
 
     if (!authorizedUser) {
@@ -69,7 +71,7 @@ app.post('/uploadFile', upload.single('file'), async (req, res) => {
     }
 
     // save metadata to db:
-    await uploadedFileMetadata(req.file.filename, authorizedUser.username, null, null);
+    await db.uploadedFileMetadata(req.file.filename, authorizedUser.username, null, null);
 
     res.status(200).json({
         message: 'File uploaded successfully',
@@ -85,7 +87,7 @@ app.post('/updateTags', async (req, res) => {
     let authorizedUser =null;
 
     if (apiKey) {
-        authorizedUser = await verifyApiKey(apiKey);
+        authorizedUser = await auth.verifyApiKey(apiKey);
     }
 
     if (!authorizedUser) {
@@ -99,7 +101,7 @@ app.post('/updateTags', async (req, res) => {
     }
 
     // save tags to db:
-    await updateFileTags(req.body.id, req.body.tags);
+    await db.updateFileTags(req.body.id, req.body.tags);
 
     res.status(200).json({
         message: 'Tags updated successfully',
@@ -109,8 +111,8 @@ app.post('/updateTags', async (req, res) => {
 app.get('/getAllFiles', async (req, res) => {
     console.log(req.headers['sepricloud-api-key']);
     const apiKey = req.headers['sepricloud-api-key'];
-    if (apiKey && await verifyApiKey(apiKey)) {
-        const filesMetadata = await getAllFilesMetadata();
+    if (apiKey && await auth.verifyApiKey(apiKey)) {
+        const filesMetadata = await db.getAllFilesMetadata();
         res.status(200).json(filesMetadata);
     } else {
         res.status(401).json({error: '401 - ACCESS DENIED'});

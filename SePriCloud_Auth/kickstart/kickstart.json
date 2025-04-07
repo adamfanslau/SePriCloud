@@ -5,11 +5,11 @@
     "asymmetricKeyId": "#{UUID()}",
     "clientSecret": "super-secret-secret-that-should-be-regenerated-for-production",
     "defaultTenantId": "d7d09513-a3f5-401c-9685-34ab6c552453",
-    "adminEmail": "admin@example.com",
-    "adminPassword": "password",
+    "adminEmail": "<ADD ADMIN EMAIL HERE>",
+    "adminPassword": "<ADD ADMIN PASSWORD HERE>",
     "adminUserId": "00000000-0000-0000-0000-000000000001",
-    "userEmail": "adam@example.com",
-    "userPassword": "password",
+    "userEmail": "<ADD USER EMAIL HERE>",
+    "userPassword": "<ADD USER PASSWORD HERE>",
     "userUserId": "00000000-0000-0000-0000-111111111111"
   },
   "apiKeys": [
