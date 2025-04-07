@@ -1,4 +1,4 @@
-###Before building the docker image, modify `kickstart.json`, adding:admin/user credentials:
+### Before building the docker image, modify `kickstart.json`, adding:admin/user credentials:
 ```json
   "variables": {
     ...
