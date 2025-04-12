@@ -1,10 +1,10 @@
-import { ReactNode, createContext, useEffect } from "react";
+import { ReactNode, createContext } from "react";
 import { useContext, useState } from "react";
 import { router, useSegments } from "expo-router";
 
 type User = {
-    accessToken: any;
-    user: any;
+  accessToken: any;
+  user: any;
 };
 
 type AuthProvider = {
@@ -34,10 +34,6 @@ export const AuthContext = createContext<AuthProvider>({
 });
 
 export function useAuth() {
-  if (!useContext(AuthContext)) {
-    throw new Error("useAuth must be used within a <AuthProvider />");
-  }
-
   return useContext(AuthContext);
 }
 
@@ -49,27 +45,27 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [apiKey, setApiKey] = useState<string>('');
 
   const updateUser = (updatedUser: User | null) => {
-    setUser(updatedUser);
+      setUser(updatedUser);
   }
 
   const updateServerUrl = (updatedUrl: string) => {
-    setServerUrl(updatedUrl);
+      setServerUrl(updatedUrl);
   }
 
   const updateAuthPrefix = (updatedAuthPrefix: string) => {
-    setAuthPrefix(updatedAuthPrefix);
+      setAuthPrefix(updatedAuthPrefix);
   }
 
   const updateApiPrefix = (updatedApiPrefix: string) => {
-    setApiPrefix(updatedApiPrefix);
+      setApiPrefix(updatedApiPrefix);
   }
 
   const updateApiKey = (updatedApiKey: string) => {
-    setApiKey(updatedApiKey);
+      setApiKey(updatedApiKey);
   }
 
   return (
-    <AuthContext.Provider value={{
+      <AuthContext.Provider value={{
       user,
       updateUser,
       serverUrl,
@@ -80,8 +76,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       updateApiPrefix,
       apiKey,
       updateApiKey
-    }}>
+      }}>
       {children}
-    </AuthContext.Provider>
+      </AuthContext.Provider>
   );
 }

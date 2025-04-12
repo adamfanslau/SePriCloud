@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { Button, Image, Text, View, StyleSheet, Alert, Modal, ActivityIndicator, ScrollView, Dimensions, Pressable } from "react-native";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { useAuth } from "@/context/AuthProvider";
@@ -14,7 +14,6 @@ export default function HomeScreen() {
   console.log('user: ', user);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: false,
@@ -36,7 +35,7 @@ export default function HomeScreen() {
 
   const uploadImage = async () => {
     if (imageArray === null || imageArray.length === 0) {
-      Alert.alert("No image selected", "Please select an image first.");
+      Alert.alert("No image selected", "Please select some images first.");
       return;
     }
     
@@ -57,10 +56,10 @@ export default function HomeScreen() {
         console.log('Upload complete:', response);
       }
       
-      Alert.alert("Success", "File uploaded successfully!");
+      Alert.alert("Success", "File(s) uploaded successfully!");
     } catch (error) {
       console.error('Upload failed:', error);
-      Alert.alert("Upload Failed", "There was an error uploading your file.");
+      Alert.alert("Upload Failed", "There was an error uploading your file(s).");
     } finally {
       setUploading(false);
       setImageArray(null);
@@ -77,7 +76,7 @@ export default function HomeScreen() {
     >
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#3f83cc" />
           <Text style={styles.modalText}>Uploading...</Text>
         </View>
       </View>

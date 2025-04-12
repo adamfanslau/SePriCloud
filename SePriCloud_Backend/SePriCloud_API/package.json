@@ -1,7 +1,7 @@
 {
   "name": "sepricloud_api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.mjs",
   "scripts": {
     "start": "node ./src/server.mjs",
     "test": "npx mocha ./__test__/"
@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "Adam Fanslau",
   "license": "ISC",
-  "description": "",
+  "description": "Rest API for Sepricloud Project",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

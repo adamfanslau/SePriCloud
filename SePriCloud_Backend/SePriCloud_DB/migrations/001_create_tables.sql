@@ -1,3 +1,5 @@
+-- migrations to be executed when db is initialized
+
 CREATE TABLE file_metadata (
     id TEXT PRIMARY KEY,
     added_by TEXT,

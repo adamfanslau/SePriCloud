@@ -1,3 +1,7 @@
+// aproach to FusionAuth integration in this file inspired by and partially implemented
+// from official fusionauth tutorial for react native:
+// https://fusionauth.io/docs/quickstarts/quickstart-react-native
+
 import { Link } from "expo-router";
 import { Button, Image, Text, View, StyleSheet, Alert, TouchableOpacity, TextInput } from "react-native";
 import { useEffect, useState } from 'react';

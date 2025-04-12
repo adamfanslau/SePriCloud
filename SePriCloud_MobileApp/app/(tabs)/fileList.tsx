@@ -143,12 +143,11 @@ export default function DetailsScreen() {
     }));
   };
 
-  // New function to send updated tags to the API
   const updateTagsOnServer = (fileId: string, tags: string[]) => {
     // Convert tags array to comma-delimited string
     const tagsString = tags.join(',');
     
-    // Send update to the server
+    // Send updated tag list to the server
     fetch(`https://${apiPrefix}.${serverUrl}/updateTags`, {
       method: 'POST',
       headers: {
@@ -213,33 +212,6 @@ export default function DetailsScreen() {
     
     setFilesMetadata(updatedFiles);
     sortAndFilterFiles(updatedFiles, sortField, sortOrder, searchQuery);
-  };
-
-  // Update the modal to handle tag management for the selected image
-  const addTagToSelectedImage = () => {
-    if (!selectedImage || !tagInputs[selectedImage.id]) return;
-    
-    addTag(selectedImage.id);
-    
-    // Update the selected image state to reflect the change
-    if (selectedImage) {
-      const updatedFile = filesMetadata.find(file => file.id === selectedImage.id);
-      if (updatedFile) {
-        setSelectedImage(updatedFile);
-      }
-    }
-  };
-
-  const removeTagFromSelectedImage = (tagToRemove: string) => {
-    if (!selectedImage) return;
-    
-    removeTag(selectedImage.id, tagToRemove);
-    
-    // Update the selected image state to reflect the change
-    const updatedFile = filesMetadata.find(file => file.id === selectedImage.id);
-    if (updatedFile) {
-      setSelectedImage(updatedFile);
-    }
   };
 
   const renderImageModal = () => (
@@ -322,7 +294,7 @@ export default function DetailsScreen() {
         <TextInput
           style={styles.searchInput}
           placeholder="Search by tags..."
-          placeholderTextColor="#666" // Darker placeholder text
+          placeholderTextColor="#666"
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
@@ -413,7 +385,7 @@ export default function DetailsScreen() {
                   <TextInput
                     style={styles.tagInput}
                     placeholder="Add tag..."
-                    placeholderTextColor="#666" // Darker placeholder text
+                    placeholderTextColor="#666"
                     value={tagInputs[item.id] || ''}
                     onChangeText={(text) => handleTagInputChange(item.id, text)}
                     onSubmitEditing={() => addTag(item.id)}
@@ -471,11 +443,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
-    color: '#333', // Make sure text color is dark for better readability
+    color: '#333',
   },
   sortContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-start', // Changed from space-around to align label with buttons
+    justifyContent: 'flex-start',
     alignItems: 'center',
     padding: 10,
     backgroundColor: '#f0f0f0',
@@ -494,7 +466,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0e0e0',
     minWidth: 120,
     alignItems: 'center',
-    marginRight: 8, // Add spacing between buttons
+    marginRight: 8,
   },
   activeSortButton: {
     backgroundColor: '#3f83cc',
@@ -582,7 +554,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     fontSize: 12,
     marginRight: 4,
-    color: '#333', // Ensure text is dark
+    color: '#333',
   },
   addTagButton: {
     backgroundColor: '#3f83cc',

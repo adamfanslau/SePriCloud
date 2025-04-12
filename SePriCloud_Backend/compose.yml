@@ -1,3 +1,5 @@
+# docker compose file to orchestrate both api and db containers together
+
 services:
   sepricloud_api:
     image: adamf00/sepricloud_api

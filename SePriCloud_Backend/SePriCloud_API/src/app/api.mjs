@@ -5,9 +5,7 @@ import multer from 'multer';
 import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-// import { uploadedFileMetadata, getAllFilesMetadata, updateFileTags } from './db/index.mjs';
-import { v4 as uuidv4 } from 'uuid';
-// import { verifyApiKey } from './verifyApiKey.mjs';
+import { v4 as uuidv4 } from 'uuid'; // currently not used but could be to generate unique file names???
 import db from './db/index.mjs';
 import auth from './verifyApiKey.mjs';
 
@@ -16,6 +14,7 @@ const app = express();
 // Resolve current directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
 // Configure multer to store uploaded files in the '~/uploads/' directory
 const uploadFolder = path.join(__dirname, '..', '..',  'uploads'); // '~/uploads/'
 
@@ -29,15 +28,6 @@ const storage = multer.diskStorage({
     },
 });
 
-// Filter to accept only jpg files
-// const fileFilter = (req, file, cb) => {
-//     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg') {
-//         cb(null, true);
-//     } else {
-//         cb(new Error('Only .jpg files are allowed'), false);
-//     }
-// };
-
 const upload = multer({ storage });
 
 // set cors policy
@@ -47,9 +37,11 @@ app.use(cors({
 
 // api logging:
 app.use(morgan("dev"));
+
 // serving uploaded files:
 app.use('/files', express.static(uploadFolder));
 
+// converting string to JSON in request body:
 app.use(express.json());
 
 // POST endpoint to upload a jpg file
